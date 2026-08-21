@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MNS Food Market | MNS Customer Account</title>
+<style>
+:root{--primary:#176b3a;--accent:#f4a62a;--bg:#f4f7f4;--text:#1e2923}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;color:var(--text);background:radial-gradient(circle at top right,#e8f4eb 0,#f4f7f4 42%,#eef5ef 100%);min-height:100vh}
+header{background:linear-gradient(135deg,var(--primary),#23834b);color:#fff;padding:18px 6%;display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:1.5rem;font-weight:900;letter-spacing:.3px}.nav{display:flex;gap:10px;align-items:center}
+button{border:0;border-radius:9px;padding:11px 16px;font-weight:700;cursor:pointer}
+.nav button{background:rgba(255,255,255,.15);color:#fff}.logout{background:#d9534f!important}
+main{max-width:1080px;margin:38px auto;padding:0 20px}
+.welcome{background:linear-gradient(135deg,rgba(23,107,58,.98),rgba(35,131,75,.95));color:#fff;padding:38px;border-radius:24px;margin-bottom:26px;box-shadow:0 14px 35px rgba(23,107,58,.18);position:relative;overflow:hidden}.welcome:after{content:'🥬  🌶️  🍅  🛒';position:absolute;right:25px;bottom:18px;font-size:2rem;opacity:.25}
+.welcome h1{margin:0 0 8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+.card{background:rgba(255,255,255,.98);padding:24px;border-radius:20px;box-shadow:0 8px 28px rgba(0,0,0,.08);border:1px solid #e8eee9;transition:transform .2s,box-shadow .2s}.card:hover{transform:translateY(-4px);box-shadow:0 14px 32px rgba(23,107,58,.13)}
+.card h2{margin-top:0;color:var(--primary)}
+.info{display:grid;gap:12px}.info-row{padding:12px;background:#f5f7f5;border-radius:10px}
+.label{font-size:.8rem;color:#68736d}.value{font-weight:700;margin-top:3px}
+.primary{background:var(--primary);color:#fff}.accent{background:var(--accent);color:#222}
+.modal{display:none;position:fixed;inset:0;background:#0008;place-items:center;padding:20px;z-index:10}
+.modal.show{display:grid}.box{background:#fff;width:min(450px,100%);padding:30px;border-radius:24px;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.box h2{margin-top:0}.box input{width:100%;padding:13px;margin:7px 0 14px;border:1px solid #ccd5cf;border-radius:9px}
+.box button{width:100%;margin-top:7px}
+.message{margin-top:12px;padding:10px;border-radius:8px;display:none}
+.success{background:#e5f6eb;color:#176b3a}.error{background:#fde9e9;color:#9b2424}
+.hidden{display:none!important}
+.empty{text-align:center;padding:30px;color:#6c7770}
+</style>
+</head>
+<body>
+
+<header>
+  <div><div class="logo">🛒 MNS Food Market</div><div style="font-size:.72rem;opacity:.85;margin-top:2px">Fresh • Local • Convenient</div></div>
+  <div class="nav">
+    <span id="headerUser">Guest</span>
+    <button id="loginBtn" onclick="openLogin()">Customer Login</button>
+    <button id="logoutBtn" class="logout hidden" onclick="logout()">Logout</button>
+  </div>
+</header>
+
+<main>
+  <section id="guestView" class="welcome">
+    <h1>Welcome to MNS Food Market</h1>
+    <p>Your fresh food, vegetables, shito and everyday groceries — all in one convenient place.</p>
+    <button class="accent" onclick="openLogin()">🔐 Login to My Account</button>
+  </section>
+
+  <section id="accountView" class="hidden">
+    <div class="welcome">
+      <h1>Welcome back, <span id="welcomeName"></span>! 👋</h1>
+      <p>Here you can view the information connected to your food-market account.</p>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h2>👤 My Information</h2>
+        <div class="info">
+          <div class="info-row"><div class="label">Full Name</div><div class="value" id="profileName">—</div></div>
+          <div class="info-row"><div class="label">Email</div><div class="value" id="profileEmail">—</div></div>
+          <div class="info-row"><div class="label">Phone</div><div class="value" id="profilePhone">—</div></div>
+        </div>
+        <button class="primary" style="margin-top:15px" onclick="openEdit()">Edit Information</button>
+      </div>
+
+      <div class="card">
+        <h2>📍 Delivery Details</h2>
+        <div class="info">
+          <div class="info-row"><div class="label">Delivery Address</div><div class="value" id="profileAddress">—</div></div>
+          <div class="info-row"><div class="label">City</div><div class="value" id="profileCity">—</div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>🛍️ My Orders</h2>
+        <p id="ordersText">No orders have been placed yet.</p>
+        <button class="accent" onclick="alert('Connect this button to your real order database to display customer orders.')">View Orders</button>
+      </div>
+
+      <div class="card">
+        <h2>🔐 Account Security</h2>
+        <p>Your account is protected by your login details.</p>
+        <button class="primary" onclick="openEdit()">Update Account</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="modal" id="loginModal">
+  <div class="box">
+    <h2>Customer Login</h2>
+    <p>Enter your account information to continue.</p>
+    <label>Email</label>
+    <input id="loginEmail" type="email" placeholder="customer@example.com">
+    <label>Password</label>
+    <input id="loginPassword" type="password" placeholder="Enter password">
+    <button class="primary" onclick="login()">Login</button>
+    <button onclick="closeLogin()">Cancel</button>
+    <div id="loginMessage" class="message"></div>
+    <p style="font-size:.85rem;color:#68736d">Demo: if no account exists, you can create one below.</p>
+    <button class="accent" onclick="switchToRegister()">Create MNS Customer Account</button>
+  </div>
+</div>
+
+<div class="modal" id="registerModal">
+  <div class="box">
+    <h2>Create MNS Customer Account</h2>
+    <label>Full Name</label>
+    <input id="regName" placeholder="Your full name">
+    <label>Email</label>
+    <input id="regEmail" type="email" placeholder="you@example.com">
+    <label>Phone</label>
+    <input id="regPhone" placeholder="+233 ...">
+    <label>Password</label>
+    <input id="regPassword" type="password" placeholder="Create a password">
+    <label>Delivery Address</label>
+    <input id="regAddress" placeholder="House number, street">
+    <label>City</label>
+    <input id="regCity" placeholder="Accra">
+    <button class="primary" onclick="register()">Create Account</button>
+    <button onclick="closeRegister()">Cancel</button>
+    <div id="registerMessage" class="message"></div>
+  </div>
+</div>
+
+<div class="modal" id="editModal">
+  <div class="box">
+    <h2>Edit My Information</h2>
+    <label>Full Name</label><input id="editName">
+    <label>Phone</label><input id="editPhone">
+    <label>Delivery Address</label><input id="editAddress">
+    <label>City</label><input id="editCity">
+    <button class="primary" onclick="saveEdit()">Save Changes</button>
+    <button onclick="closeEdit()">Cancel</button>
+  </div>
+</div>
+
+<script>
+let account=JSON.parse(localStorage.getItem("customerAccount")||"null");
+let loggedIn=localStorage.getItem("customerLoggedIn")==="true";
+
+function showMessage(id,text,type){
+ const el=document.getElementById(id);el.textContent=text;el.className="message "+type;el.style.display="block";
+}
+function openLogin(){document.getElementById("loginModal").classList.add("show")}
+function closeLogin(){document.getElementById("loginModal").classList.remove("show")}
+function openEdit(){
+ if(!account)return;
+ document.getElementById("editName").value=account.name;
+ document.getElementById("editPhone").value=account.phone||"";
+ document.getElementById("editAddress").value=account.address||"";
+ document.getElementById("editCity").value=account.city||"";
+ document.getElementById("editModal").classList.add("show");
+}
+function closeEdit(){document.getElementById("editModal").classList.remove("show")}
+function switchToRegister(){closeLogin();document.getElementById("registerModal").classList.add("show")}
+function closeRegister(){document.getElementById("registerModal").classList.remove("show")}
+
+function register(){
+ const name=document.getElementById("regName").value.trim();
+ const email=document.getElementById("regEmail").value.trim().toLowerCase();
+ const phone=document.getElementById("regPhone").value.trim();
+ const password=document.getElementById("regPassword").value;
+ const address=document.getElementById("regAddress").value.trim();
+ const city=document.getElementById("regCity").value.trim();
+ if(!name||!email||!password){showMessage("registerMessage","Please complete name, email and password.","error");return}
+ account={name,email,phone,password,address,city};
+ localStorage.setItem("customerAccount",JSON.stringify(account));
+ loggedIn=true;localStorage.setItem("customerLoggedIn","true");
+ closeRegister();updateUI();
+}
+function login(){
+ const email=document.getElementById("loginEmail").value.trim().toLowerCase();
+ const password=document.getElementById("loginPassword").value;
+ if(!account){showMessage("loginMessage","No account found. Please create a customer account first.","error");return}
+ if(email===account.email && password===account.password){
+   loggedIn=true;localStorage.setItem("customerLoggedIn","true");closeLogin();updateUI();
+ }else showMessage("loginMessage","Incorrect email or password.","error");
+}
+function logout(){loggedIn=false;localStorage.setItem("customerLoggedIn","false");updateUI()}
+function saveEdit(){
+ account.name=document.getElementById("editName").value.trim();
+ account.phone=document.getElementById("editPhone").value.trim();
+ account.address=document.getElementById("editAddress").value.trim();
+ account.city=document.getElementById("editCity").value.trim();
+ localStorage.setItem("customerAccount",JSON.stringify(account));
+ closeEdit();updateUI();
+}
+function updateUI(){
+ document.getElementById("guestView").classList.toggle("hidden",loggedIn);
+ document.getElementById("accountView").classList.toggle("hidden",!loggedIn);
+ document.getElementById("loginBtn").classList.toggle("hidden",loggedIn);
+ document.getElementById("logoutBtn").classList.toggle("hidden",!loggedIn);
+ document.getElementById("headerUser").textContent=loggedIn?account.name:"Guest";
+ if(loggedIn){
+   document.getElementById("welcomeName").textContent=account.name;
+   document.getElementById("profileName").textContent=account.name;
+   document.getElementById("profileEmail").textContent=account.email;
+   document.getElementById("profilePhone").textContent=account.phone||"Not provided";
+   document.getElementById("profileAddress").textContent=account.address||"Not provided";
+   document.getElementById("profileCity").textContent=account.city||"Not provided";
+ }
+}
+updateUI();
+</script>
+</body>
+</html>
